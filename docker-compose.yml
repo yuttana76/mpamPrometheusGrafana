@@ -1,0 +1,78 @@
+version: '3'
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
+services:
+
+# https://docs.linuxserver.io/images/docker-webtop
+  # webtop:
+  #   image: lscr.io/linuxserver/webtop:ubuntu-mate
+  #   container_name: webtop
+  #   security_opt:
+  #     - seccomp:unconfined #optional
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Etc/UTC
+  #     - SUBFOLDER=/ #optional
+  #     - KEYBOARD=en-us-qwerty #optional
+  #     - TITLE=Webtop #optional
+  #   volumes:
+  #     - ./webtop/data:/config
+  #     - ./webtop/docker.sock:/var/run/docker.sock #optional
+  #   ports:
+  #     - 3001:3001
+  #   # devices:
+  #   #   - ./webtop/dri:/dev/dri #optional
+  #   shm_size: "1gb" #optional
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ./webtop/.env
+    
+  #alertmanager:
+  #  container_name: alertmanager
+  #  hostname: alertmanager
+  #  image: prom/alertmanager
+  #  volumes:
+  #    - ./alertmanager.conf:/etc/alertmanager/alertmanager.conf
+  #  command:
+  #    - '--config.file=/etc/alertmanager/alertmanager.conf'
+  #  ports:
+  #    - 9093:9093
+
+  prometheus:
+    container_name: prometheus
+    hostname: prometheus
+    image: prom/prometheus
+    #networks:
+    #  - backend
+    # network_mode: "host"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    #links:
+    #  - alertmanager:alertmanager
+    ports:
+      - 9090:9090
+
+  grafana:
+    container_name: grafana
+    hostname: grafana
+    image: grafana/grafana
+    #networks:
+    #  - backend
+    volumes:
+      - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./grafana_config.ini:/etc/grafana/config.ini
+      - grafana_data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    
+#networks:
+#  backend:
+#    driver: bridge  
