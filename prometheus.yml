@@ -29,4 +29,9 @@ scrape_configs:
     scrape_interval: 1s
     static_configs:
       - targets: ['192.168.10.57:9100']
-    
+      
+  - job_name: 'node_exporter58'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['192.168.10.58:9100']
+  
