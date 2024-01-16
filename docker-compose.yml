@@ -2,7 +2,7 @@ version: '3'
 
 volumes:
   prometheus_data: {}
-  grafana_data: {}
+  grafana-data: {}
   postgres-data:
 
 services:
