@@ -66,13 +66,28 @@ services:
     image: grafana/grafana
     #networks:
     #  - backend
+    # volumes:
+    #   - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+    #   - ./grafana_config.ini:/etc/grafana/config.ini
+    #   - grafana_data:/var/lib/grafana
     volumes:
-      - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
-      - ./grafana_config.ini:/etc/grafana/config.ini
-      - grafana_data:/var/lib/grafana
+      - ./grafana:/var/lib/grafana
+    env_file: environment/.gfenv
     ports:
       - 3000:3000
-    
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    ports:
+        - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file: 
+        - environment/.tsenv    
+
 #networks:
 #  backend:
 #    driver: bridge  
