@@ -67,12 +67,12 @@ services:
     image: grafana/grafana
     #networks:
     #  - backend
-    # volumes:
-    #   - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
-    #   - ./grafana_config.ini:/etc/grafana/config.ini
-    #   - grafana-data:/var/lib/grafana
     volumes:
+      - ./grafana_datasources.yml:/etc/grafana/provisioning/datasources/all.yaml
+      - ./grafana_config.ini:/etc/grafana/config.ini
       - grafana-data:/var/lib/grafana
+    # volumes:
+    #   - grafana-data:/var/lib/grafana
     env_file: environment/.gfenv
     ports:
       - 3000:3000
